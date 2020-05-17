@@ -143,8 +143,10 @@ public class MQClientInstance {
 
         this.mQAdminImpl = new MQAdminImpl(this);
 
+        //拉取消息服务
         this.pullMessageService = new PullMessageService(this);
 
+        //负载均衡服务
         this.rebalanceService = new RebalanceService(this);
 
         this.defaultMQProducer = new DefaultMQProducer(MixAll.CLIENT_INNER_PRODUCER_GROUP);
