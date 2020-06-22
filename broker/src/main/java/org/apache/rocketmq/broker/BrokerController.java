@@ -179,6 +179,7 @@ public class BrokerController {
         this.nettyClientConfig = nettyClientConfig;
         this.messageStoreConfig = messageStoreConfig;
         this.consumerOffsetManager = new ConsumerOffsetManager(this);
+        //设置内置Topic
         this.topicConfigManager = new TopicConfigManager(this);
         this.pullMessageProcessor = new PullMessageProcessor(this);
         this.pullRequestHoldService = new PullRequestHoldService(this);
@@ -189,6 +190,7 @@ public class BrokerController {
         this.producerManager = new ProducerManager();
         this.clientHousekeepingService = new ClientHousekeepingService(this);
         this.broker2Client = new Broker2Client(this);
+        //设置内置订阅组
         this.subscriptionGroupManager = new SubscriptionGroupManager(this);
         this.brokerOuterAPI = new BrokerOuterAPI(nettyClientConfig);
         this.filterServerManager = new FilterServerManager(this);
@@ -232,9 +234,11 @@ public class BrokerController {
     }
 
     public boolean initialize() throws CloneNotSupportedException {
+        //加载topicConfigTable
         boolean result = this.topicConfigManager.load();
-
+        //加载offsetTable
         result = result && this.consumerOffsetManager.load();
+        //加载subscriptionGroupTable
         result = result && this.subscriptionGroupManager.load();
         result = result && this.consumerFilterManager.load();
 

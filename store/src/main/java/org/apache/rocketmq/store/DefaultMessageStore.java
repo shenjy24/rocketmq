@@ -126,6 +126,7 @@ public class DefaultMessageStore implements MessageStore {
         } else {
             this.commitLog = new CommitLog(this);
         }
+        //消费队列
         this.consumeQueueTable = new ConcurrentHashMap<>(32);
 
         this.flushConsumeQueueService = new FlushConsumeQueueService();

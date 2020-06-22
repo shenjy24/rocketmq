@@ -75,8 +75,10 @@ public class CommitLog {
         this.defaultMessageStore = defaultMessageStore;
 
         if (FlushDiskType.SYNC_FLUSH == defaultMessageStore.getMessageStoreConfig().getFlushDiskType()) {
+            //同步刷盘
             this.flushCommitLogService = new GroupCommitService();
         } else {
+            //异步刷屏
             this.flushCommitLogService = new FlushRealTimeService();
         }
 
