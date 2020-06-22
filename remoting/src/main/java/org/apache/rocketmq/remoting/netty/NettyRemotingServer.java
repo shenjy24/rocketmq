@@ -195,6 +195,8 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
         prepareSharableHandlers();
 
+        //eventLoopGroupBoss处理客户端连接
+        //eventLoopGroupSelector用于IO操作
         ServerBootstrap childHandler =
             this.serverBootstrap.group(this.eventLoopGroupBoss, this.eventLoopGroupSelector)
                 .channel(useEpoll() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
@@ -236,6 +238,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
             this.nettyEventExecutor.start();
         }
 
+        //定期清除过期请求
         this.timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
@@ -343,9 +346,11 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     }
 
     private void prepareSharableHandlers() {
+        //SSL相关的处理器
         handshakeHandler = new HandshakeHandler(TlsSystemConfig.tlsMode);
         encoder = new NettyEncoder();
         connectionManageHandler = new NettyConnectManageHandler();
+        //用于处理消息发送接收
         serverHandler = new NettyServerHandler();
     }
 

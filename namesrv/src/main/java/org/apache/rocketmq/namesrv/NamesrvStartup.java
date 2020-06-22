@@ -86,6 +86,7 @@ public class NamesrvStartup {
         final NamesrvConfig namesrvConfig = new NamesrvConfig();
         final NettyServerConfig nettyServerConfig = new NettyServerConfig();
         nettyServerConfig.setListenPort(9876);
+        //指定配置文件
         if (commandLine.hasOption('c')) {
             String file = commandLine.getOptionValue('c');
             if (file != null) {
@@ -147,6 +148,7 @@ public class NamesrvStartup {
             System.exit(-3);
         }
 
+        //注册关闭钩子
         Runtime.getRuntime().addShutdownHook(new ShutdownHookThread(log, new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -155,6 +157,7 @@ public class NamesrvStartup {
             }
         }));
 
+        //主要启动了Netty Server, 用于处理请求以及解析其他端返回的响应
         controller.start();
 
         return controller;

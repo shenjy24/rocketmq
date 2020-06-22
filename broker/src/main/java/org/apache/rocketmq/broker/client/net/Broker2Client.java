@@ -51,6 +51,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Broker向客户端传送消息
+ */
 public class Broker2Client {
     private static final InternalLogger log = InternalLoggerFactory.getLogger(LoggerName.BROKER_LOGGER_NAME);
     private final BrokerController brokerController;
@@ -59,6 +62,7 @@ public class Broker2Client {
         this.brokerController = brokerController;
     }
 
+    //校验事务消息状态
     public void checkProducerTransactionState(
         final String group,
         final Channel channel,
@@ -124,6 +128,7 @@ public class Broker2Client {
             mq.setTopic(topic);
             mq.setQueueId(i);
 
+            //获取消费者队列偏移量
             long consumerOffset =
                 this.brokerController.getConsumerOffsetManager().queryOffset(group, topic, i);
             if (-1 == consumerOffset) {
