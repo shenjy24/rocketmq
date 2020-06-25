@@ -37,6 +37,7 @@ public class StoreCheckpoint {
     private volatile long indexMsgTimestamp = 0;
 
     public StoreCheckpoint(final String scpPath) throws IOException {
+        //存储根目录 /store
         File file = new File(scpPath);
         MappedFile.ensureDirOK(file.getParent());
         boolean fileExists = file.exists();

@@ -220,6 +220,7 @@ public class IndexService {
             }
 
             if (req.getUniqKey() != null) {
+                //设置索引项
                 indexFile = putKey(indexFile, msg, buildKey(topic, req.getUniqKey()));
                 if (indexFile == null) {
                     log.error("putKey error commitlog {} uniqkey {}", req.getCommitLogOffset(), req.getUniqKey());
@@ -298,6 +299,7 @@ public class IndexService {
         {
             this.readWriteLock.readLock().lock();
             if (!this.indexFileList.isEmpty()) {
+                //获取最后一个索引文件，如果未写满则赋值给indexFile
                 IndexFile tmp = this.indexFileList.get(this.indexFileList.size() - 1);
                 if (!tmp.isWriteFull()) {
                     indexFile = tmp;
@@ -311,8 +313,10 @@ public class IndexService {
             this.readWriteLock.readLock().unlock();
         }
 
+        //最后一个索引文件已经写满，因此需要新建
         if (indexFile == null) {
             try {
+                //文件名：存储路径 + "/" + 时间戳
                 String fileName =
                     this.storePath + File.separator
                         + UtilAll.timeMillisToHumanString(System.currentTimeMillis());
