@@ -149,12 +149,15 @@ public class DefaultMessageStore implements MessageStore {
             this.transientStorePool.init();
         }
 
+        //为每个AllocateRequest分配MappedFile
         this.allocateMappedFileService.start();
 
         this.indexService.start();
 
         this.dispatcherList = new LinkedList<>();
+        // TODO: 2020/6/24 创建消费队列 
         this.dispatcherList.addLast(new CommitLogDispatcherBuildConsumeQueue());
+        // TODO: 2020/6/24 创建索引文件 
         this.dispatcherList.addLast(new CommitLogDispatcherBuildIndex());
 
         File file = new File(StorePathConfigHelper.getLockFile(messageStoreConfig.getStorePathRootDir()));
@@ -1192,7 +1195,7 @@ public class DefaultMessageStore implements MessageStore {
     }
 
     public ConsumeQueue findConsumeQueue(String topic, int queueId) {
-        ConcurrentMap<Integer, ConsumeQueue> map = consumeQueueTable.get(topic);
+        ConcurrentMap<Integer /* queue id */, ConsumeQueue> map = consumeQueueTable.get(topic);
         if (null == map) {
             ConcurrentMap<Integer, ConsumeQueue> newMap = new ConcurrentHashMap<Integer, ConsumeQueue>(128);
             ConcurrentMap<Integer, ConsumeQueue> oldMap = consumeQueueTable.putIfAbsent(topic, newMap);
