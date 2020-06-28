@@ -262,6 +262,7 @@ public class BrokerController {
             }
         }
 
+        //加载CommitLog, ConsumeQueue, IndexFile
         result = result && this.messageStore.load();
 
         if (result) {
@@ -856,10 +857,12 @@ public class BrokerController {
     }
 
     public void start() throws Exception {
+        // TODO: 2020/6/28
         if (this.messageStore != null) {
             this.messageStore.start();
         }
 
+        //启动Netty服务端
         if (this.remotingServer != null) {
             this.remotingServer.start();
         }
@@ -868,22 +871,27 @@ public class BrokerController {
             this.fastRemotingServer.start();
         }
 
+        //监听指定文件的更新
         if (this.fileWatchService != null) {
             this.fileWatchService.start();
         }
 
+        //启动Netty客户端
         if (this.brokerOuterAPI != null) {
             this.brokerOuterAPI.start();
         }
 
+        // TODO: 2020/6/28 拉消息
         if (this.pullRequestHoldService != null) {
             this.pullRequestHoldService.start();
         }
 
+        //定期扫描失效的生产者、消费者channel
         if (this.clientHousekeepingService != null) {
             this.clientHousekeepingService.start();
         }
 
+        // TODO: 2020/6/28
         if (this.filterServerManager != null) {
             this.filterServerManager.start();
         }
@@ -894,6 +902,7 @@ public class BrokerController {
             this.registerBrokerAll(true, false, true);
         }
 
+        //定期向NameServer注册Broker信息
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -910,6 +919,7 @@ public class BrokerController {
             this.brokerStatsManager.start();
         }
 
+        //定期清除过期请求
         if (this.brokerFastFailure != null) {
             this.brokerFastFailure.start();
         }

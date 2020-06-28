@@ -222,6 +222,11 @@ public class BrokerStartup {
             // remember all configs to prevent discard
             controller.getConfiguration().registerConfig(properties);
 
+            /**
+             * 1. 加载Topic, CommitLog, ConsumeQueue, IndexFile等基础信息
+             * 2. 启动定时任务
+             * 3. 创建线程池
+             */
             boolean initResult = controller.initialize();
             if (!initResult) {
                 controller.shutdown();

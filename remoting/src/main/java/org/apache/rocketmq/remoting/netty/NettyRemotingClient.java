@@ -189,6 +189,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                 }
             });
 
+        //定期清理过期请求
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
