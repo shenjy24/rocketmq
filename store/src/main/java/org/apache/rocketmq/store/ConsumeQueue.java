@@ -77,6 +77,7 @@ public class ConsumeQueue {
     }
 
     public boolean load() {
+        //加载mappedFiles
         boolean result = this.mappedFileQueue.load();
         log.info("load consume queue " + this.topic + "-" + this.queueId + " " + (result ? "OK" : "Failed"));
         if (isExtReadEnable()) {
@@ -296,6 +297,7 @@ public class ConsumeQueue {
 
         int logicFileSize = this.mappedFileSize;
 
+        //获取最后一个MappedFile
         MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();
         if (mappedFile != null) {
 

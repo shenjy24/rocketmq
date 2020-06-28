@@ -155,9 +155,9 @@ public class DefaultMessageStore implements MessageStore {
         this.indexService.start();
 
         this.dispatcherList = new LinkedList<>();
-        // TODO: 2020/6/24 创建消费队列 
+        //消费队列分发器
         this.dispatcherList.addLast(new CommitLogDispatcherBuildConsumeQueue());
-        // TODO: 2020/6/24 创建索引文件 
+        //索引文件分发器
         this.dispatcherList.addLast(new CommitLogDispatcherBuildIndex());
 
         File file = new File(StorePathConfigHelper.getLockFile(messageStoreConfig.getStorePathRootDir()));
@@ -190,15 +190,18 @@ public class DefaultMessageStore implements MessageStore {
             }
 
             // load Commit Log
+            //将磁盘的CommitLog文件加载到mappedFiles属性
             result = result && this.commitLog.load();
 
             // load Consume Queue
+            //将磁盘的消费队列文件加载到consumeQueueTable属性
             result = result && this.loadConsumeQueue();
 
             if (result) {
                 this.storeCheckpoint =
                     new StoreCheckpoint(StorePathConfigHelper.getStoreCheckpoint(this.messageStoreConfig.getStorePathRootDir()));
 
+                //将磁盘的索引文件加载到indexFileList属性
                 this.indexService.load(lastExitOK);
 
                 this.recover(lastExitOK);
@@ -1208,6 +1211,7 @@ public class DefaultMessageStore implements MessageStore {
 
         ConsumeQueue logic = map.get(queueId);
         if (null == logic) {
+            //创建消费队列
             ConsumeQueue newLogic = new ConsumeQueue(
                 topic,
                 queueId,
@@ -1361,6 +1365,9 @@ public class DefaultMessageStore implements MessageStore {
         File[] fileTopicList = dirLogic.listFiles();
         if (fileTopicList != null) {
 
+            /**
+             * 消费队列的文件目录格式为：consumequeue/${topic}/${queueId}(多个)/文件名为偏移量的文件
+             */
             for (File fileTopic : fileTopicList) {
                 String topic = fileTopic.getName();
 
