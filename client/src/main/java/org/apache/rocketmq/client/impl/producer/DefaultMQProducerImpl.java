@@ -551,11 +551,11 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         this.makeSureStateOK();
         Validators.checkMessage(msg, this.defaultMQProducer);
         //requestId
-        //请求ID
         final long invokeID = random.nextLong();
         long beginTimestampFirst = System.currentTimeMillis();
         long beginTimestampPrev = beginTimestampFirst;
         long endTimestamp = beginTimestampFirst;
+        //
         TopicPublishInfo topicPublishInfo = this.tryToFindTopicPublishInfo(msg.getTopic());
         if (topicPublishInfo != null && topicPublishInfo.ok()) {
             boolean callTimeout = false;

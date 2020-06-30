@@ -134,6 +134,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
                 }
             });
         } else {
+            //1个Reactor主线程（eventLoopGroupBoss）负责监听TCP网络连接请求，建立好连接，创建SocketChannel，并注册到selector上。
             this.eventLoopGroupBoss = new NioEventLoopGroup(1, new ThreadFactory() {
                 private AtomicInteger threadIndex = new AtomicInteger(0);
 
@@ -143,6 +144,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
                 }
             });
 
+            //worker线程池
             this.eventLoopGroupSelector = new NioEventLoopGroup(nettyServerConfig.getServerSelectorThreads(), new ThreadFactory() {
                 private AtomicInteger threadIndex = new AtomicInteger(0);
                 private int threadTotal = nettyServerConfig.getServerSelectorThreads();
