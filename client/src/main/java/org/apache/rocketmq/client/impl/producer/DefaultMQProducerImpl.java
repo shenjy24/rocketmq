@@ -555,7 +555,14 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         long beginTimestampFirst = System.currentTimeMillis();
         long beginTimestampPrev = beginTimestampFirst;
         long endTimestamp = beginTimestampFirst;
-        //
+
+        /**
+         * 从NameSrv获取路由信息
+         * 1. 获取Broker集群地址信息，设置brokerAddrTable
+         * 2. 更新消息发布关联的消息队列，设置topicPublishInfoTable<topic, TopicPublishInfo>
+         * 3. 更新消息消费关联的消息队列，设置topicSubscribeInfoTable<topic, Set<MessageQueue>>
+         * 4. 设置Topic关联的路由信息topicRouteTable<topic, TopicRouteData>
+         */
         TopicPublishInfo topicPublishInfo = this.tryToFindTopicPublishInfo(msg.getTopic());
         if (topicPublishInfo != null && topicPublishInfo.ok()) {
             boolean callTimeout = false;
@@ -568,7 +575,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
             String[] brokersSent = new String[timesTotal];
             for (; times < timesTotal; times++) {
                 String lastBrokerName = null == mq ? null : mq.getBrokerName();
-                //轮询
+                //从topicPublishInfo的MessageQueue列表中轮询选取
                 MessageQueue mqSelected = this.selectOneMessageQueue(topicPublishInfo, lastBrokerName);
                 if (mqSelected != null) {
                     mq = mqSelected;

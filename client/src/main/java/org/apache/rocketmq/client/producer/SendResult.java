@@ -25,6 +25,7 @@ public class SendResult {
     private MessageQueue messageQueue;
     private long queueOffset;
     private String transactionId;
+    // TODO: 2020/7/13  
     private String offsetMsgId;
     private String regionId;
     private boolean traceOn = true;

@@ -647,6 +647,7 @@ public class MQClientInstance {
 
                             // Update Pub info
                             {
+                                //创建writeQueueNums数量的MessageQueue
                                 TopicPublishInfo publishInfo = topicRouteData2TopicPublishInfo(topic, topicRouteData);
                                 publishInfo.setHaveTopicRouterInfo(true);
                                 Iterator<Entry<String, MQProducerInner>> it = this.producerTable.entrySet().iterator();
@@ -661,6 +662,7 @@ public class MQClientInstance {
 
                             // Update sub info
                             {
+                                //创建readQueueNums数量的MessageQueue
                                 Set<MessageQueue> subscribeInfo = topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
                                 Iterator<Entry<String, MQConsumerInner>> it = this.consumerTable.entrySet().iterator();
                                 while (it.hasNext()) {
