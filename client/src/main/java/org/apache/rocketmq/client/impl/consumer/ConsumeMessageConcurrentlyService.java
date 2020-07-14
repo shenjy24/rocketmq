@@ -306,6 +306,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
         long offset = consumeRequest.getProcessQueue().removeMessage(consumeRequest.getMsgs());
         if (offset >= 0 && !consumeRequest.getProcessQueue().isDropped()) {
+            // TODO: 2020/7/14 消费完成更新偏移量
             this.defaultMQPushConsumerImpl.getOffsetStore().updateOffset(consumeRequest.getMessageQueue(), offset, true);
         }
     }

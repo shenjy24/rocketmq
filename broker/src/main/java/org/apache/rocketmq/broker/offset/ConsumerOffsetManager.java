@@ -142,7 +142,7 @@ public class ConsumerOffsetManager extends ConfigManager {
     public long queryOffset(final String group, final String topic, final int queueId) {
         // topic@group
         String key = topic + TOPIC_GROUP_SEPARATOR + group;
-        ConcurrentMap<Integer, Long> map = this.offsetTable.get(key);
+        ConcurrentMap<Integer /* queue id */, Long /* offset */> map = this.offsetTable.get(key);
         if (null != map) {
             Long offset = map.get(queueId);
             if (offset != null)

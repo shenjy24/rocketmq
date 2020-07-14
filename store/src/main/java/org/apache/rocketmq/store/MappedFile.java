@@ -51,7 +51,7 @@ public class MappedFile extends ReferenceResource {
     protected final AtomicInteger wrotePosition = new AtomicInteger(0);
     protected final AtomicInteger committedPosition = new AtomicInteger(0);
     private final AtomicInteger flushedPosition = new AtomicInteger(0);
-    protected int fileSize;
+    protected int fileSize;  //单位: Bytes
     protected FileChannel fileChannel;
     /**
      * Message will put to here first, and then reput to FileChannel if writeBuffer is not null.

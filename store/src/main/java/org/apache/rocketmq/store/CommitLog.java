@@ -599,6 +599,7 @@ public class CommitLog {
 
         long elapsedTimeInLock = 0;
         MappedFile unlockMappedFile = null;
+        //获取最后一个CommitLog文件
         MappedFile mappedFile = this.mappedFileQueue.getLastMappedFile();
 
         putMessageLock.lock(); //spin or ReentrantLock ,depending on store config
