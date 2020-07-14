@@ -554,6 +554,7 @@ public class DefaultMessageStore implements MessageStore {
         return commitLog;
     }
 
+    // TODO: 2020/7/14 拉取消息
     public GetMessageResult getMessage(final String group, final String topic, final int queueId, final long offset,
         final int maxMsgNums,
         final MessageFilter messageFilter) {
