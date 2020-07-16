@@ -554,7 +554,6 @@ public class DefaultMessageStore implements MessageStore {
         return commitLog;
     }
 
-    // TODO: 2020/7/14 拉取消息
     //offset应该为index更为准确，即为queueId的消费队列中的某个消息坐标，也可以称为条数
     public GetMessageResult getMessage(final String group, final String topic, final int queueId, final long offset,
         final int maxMsgNums,
