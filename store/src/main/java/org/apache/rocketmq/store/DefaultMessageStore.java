@@ -578,6 +578,7 @@ public class DefaultMessageStore implements MessageStore {
 
         GetMessageResult getResult = new GetMessageResult();
 
+        //CommitLog最大的偏移量
         final long maxOffsetPy = this.commitLog.getMaxOffset();
 
         ConsumeQueue consumeQueue = findConsumeQueue(topic, queueId);
@@ -661,6 +662,7 @@ public class DefaultMessageStore implements MessageStore {
                                 continue;
                             }
 
+                            //获取消息在CommitLog中对应的mappedFile和对应的偏移量
                             SelectMappedBufferResult selectResult = this.commitLog.getMessage(offsetPy, sizePy);
                             if (null == selectResult) {
                                 if (getResult.getBufferTotalSize() == 0) {
