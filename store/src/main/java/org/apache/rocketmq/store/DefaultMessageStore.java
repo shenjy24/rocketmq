@@ -239,6 +239,7 @@ public class DefaultMessageStore implements MessageStore {
              * 3. Calculate the reput offset according to the consume queue;
              * 4. Make sure the fall-behind messages to be dispatched before starting the commitlog, especially when the broker role are automatically changed.
              */
+            //maxPhysicalPosInLogicQueue为消费队列中记录的commitLog的最大偏移量
             long maxPhysicalPosInLogicQueue = commitLog.getMinOffset();
             for (ConcurrentMap<Integer, ConsumeQueue> maps : this.consumeQueueTable.values()) {
                 for (ConsumeQueue logic : maps.values()) {
@@ -265,6 +266,7 @@ public class DefaultMessageStore implements MessageStore {
             log.info("[SetReputOffset] maxPhysicalPosInLogicQueue={} clMinOffset={} clMaxOffset={} clConfirmedOffset={}",
                 maxPhysicalPosInLogicQueue, this.commitLog.getMinOffset(), this.commitLog.getMaxOffset(), this.commitLog.getConfirmOffset());
             this.reputMessageService.setReputFromOffset(maxPhysicalPosInLogicQueue);
+            //定时任务持久化消费队列以及索引文件
             this.reputMessageService.start();
 
             /**
@@ -283,10 +285,12 @@ public class DefaultMessageStore implements MessageStore {
 
         if (!messageStoreConfig.isEnableDLegerCommitLog()) {
             this.haService.start();
+            //定时任务持久化store/config中的json文件
             this.handleScheduleMessageService(messageStoreConfig.getBrokerRole());
         }
 
         this.flushConsumeQueueService.start();
+        //启动定时任务持久化CommitLog
         this.commitLog.start();
         this.storeStatsService.start();
 
@@ -1918,6 +1922,8 @@ public class DefaultMessageStore implements MessageStore {
 
                             if (dispatchRequest.isSuccess()) {
                                 if (size > 0) {
+                                    //CommitLogDispatcherBuildConsumeQueue将消息持久化到消费队列中
+                                    //CommitLogDispatcherBuildIndex增加消息索引
                                     DefaultMessageStore.this.doDispatch(dispatchRequest);
 
                                     if (BrokerRole.SLAVE != DefaultMessageStore.this.getMessageStoreConfig().getBrokerRole()

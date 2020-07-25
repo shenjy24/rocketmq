@@ -157,6 +157,7 @@ public class CommitLog {
     }
 
     public SelectMappedBufferResult getData(final long offset, final boolean returnFirstOnNotFound) {
+        //一个CommitLog的文件大小，默认为1G
         int mappedFileSize = this.defaultMessageStore.getMessageStoreConfig().getMappedFileSizeCommitLog();
         MappedFile mappedFile = this.mappedFileQueue.findMappedFileByOffset(offset, returnFirstOnNotFound);
         if (mappedFile != null) {
@@ -274,9 +275,9 @@ public class CommitLog {
             int queueId = byteBuffer.getInt();
 
             int flag = byteBuffer.getInt();
-
+            //消费队列坐标
             long queueOffset = byteBuffer.getLong();
-
+            //CommitLog中的偏移量
             long physicOffset = byteBuffer.getLong();
 
             int sysFlag = byteBuffer.getInt();
